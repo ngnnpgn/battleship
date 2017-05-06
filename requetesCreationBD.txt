@@ -1,0 +1,109 @@
+DROP table joueur;
+DROP table parties;
+DROP table Participe;
+
+CREATE TABLE Joueur
+(
+    pseudo VARCHAR(20) PRIMARY KEY,
+    nom VARCHAR(100),
+    prenom VARCHAR(100),
+    email VARCHAR(255),
+    dateNaissance DATE,
+    numRue INT,
+    ville VARCHAR(255),
+    check constraint(NumRue>=0)
+);
+
+CREATE TABLE Parties
+(
+		idPartie INT PRIMARY KEY,
+		dateDebut DATE
+);
+
+CREATE TABLE Participe
+(
+		pseudo VARCHAR(20),
+		idPartie INT,
+		PRIMARY KEY(pseudo, idPartie)
+);
+
+CREATE TABLE Tour{
+	numTour INT,
+	idPartie INT reference Parties(idPartie),
+	pseudo VARCHAR(20) reference Joueur(pseudo),
+	PRIMARY KEY(NumTour,idPartie)
+
+}
+CREATE TABLE Action
+{
+	idAction INT,
+	numTour INT reference Tour(numTour) ,
+	numAction INT,
+	tourId INT,
+	idPartie INT,
+	idBateau INT,
+	PRIMARY KEY(numAction,numTour,idAction)
+};
+
+CREATE TABLE Etat {
+	idEtat INT,
+	X INT,
+	Y INT,
+	vie INT,
+	idAction INT reference Action(idAction),
+	numAction INT reference Action(numAction),
+	idBateau INT reference Bateau(idBateau),
+	PRIMARY KEY(idEtat)
+};
+
+CREATE TABLE AGagne{
+	pseudo VARCHAR(20) reference Joueur(pseudo),
+	idPartie INT reference Parties(idPartie),
+	PRIMARY KEY(pseudo,idPartie)
+};
+
+
+CREATE TABLE ActionRotation{
+	idAction INT reference Action(idAction),
+	rotation Enum('gauche','droite'),
+	PRIMARY KEY (idAction)
+};
+
+CREATE TABLE ActionDeplacement{
+	idAction INT reference Action(idAction),
+	deplacement Enum('avant','arriere'),
+	PRIMARY KEY (idAction)
+};
+
+CREATE TABLE ActionTir{
+	idAction INT reference Action(idAction),
+	X INT,
+	Y INT,
+	PRIMARY KEY (idAction),
+	CHECK constraint(X BETWEEN 1 and 10 and Y BETWEEN 1 and 10 )
+};
+
+REQUETES :
+
+Les pseudo des joueurs qui ne participes pas à une partie
+SELECT pseudo FROM joueur j WHERE NOT EXISTS (SELECT DISTINCT pseudo FROM participe WHERE j.pseudo = participe.pseudo) AND j.pseudo != '';
+
+Le nombre de parties en cours pour chaque joueur : 
+SELECT pseudo, COUNT(idPartie) 
+FROM participe part WHERE pseudo GROUP BY pseudo
+
+Les joueurs déjà en cours contre 'Romain'
+SELECT p1.pseudo 
+FROM participe p1 CROSS JOIN participe p2 
+WHERE p1.IDPARTIE=p2.IDPARTIE AND p1.pseudo != p2.pseudo AND p1.pseudo != 'Romain' ;
+
+
+//Selection des joueurs qui ne sont pas dans participe contre Romain
+SELECT pseudo, COUNT(idPartie)
+FROM participe part
+WHERE NOT EXISTS(
+SELECT p1.pseudo 
+FROM participe p1 CROSS JOIN participe p2 
+WHERE p1.IDPARTIE=p2.IDPARTIE AND p1.pseudo != p2.pseudo AND p1.pseudo != 'test1' AND p2.pseudo = 'test1' AND part.pseudo = p1.pseudo 
+) AND pseudo != 'test1'
+GROUP BY(pseudo);

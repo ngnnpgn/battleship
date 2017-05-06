@@ -1,0 +1,29 @@
+
+changer l'endroit où se trouve la fonction estTouche (la modifier également)
+vérifier que les déplacements sont les bons (avec le repère)
+rajouter la contrainte sur les déplacements
+
+--- Detecter escorteur 1 et 2 ---> fait
+--- Afficher tire de l'ennemi ---> fait
+--- Quand c'est pas ton tour , bouton enabled(false)--> fait
+--- Changer label partie en cours ---> fait
+--- bouton revenir pagejoueur(quand on est dans pagepartieencours ---> fait
+Faire une passe sur tout le code
+Se souvenir de ou on a tirer sur la carte ennemi aprés une co reco
+Faire un champ pour partie terminé dans page partie joueur
+enlever le champ 'selection partie en cours'
+--- A faire valider gagner ---> fait
+ABSTRACT Joueur
+Action placement bateaux carte
+Partie replay que l'on a joué peuvent etre vu si elles sont terminées
+rafraichir les pts de vies et pts actions
+
+//// BUG //////
+
+Inscription
+placement bateau premiere ligne(verifier placement)
+
+
+
+//option
+(bouton rafraichir pagejoueur)
